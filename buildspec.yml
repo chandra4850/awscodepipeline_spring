@@ -2,13 +2,15 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR....
-      - aws --version
-      #- $(aws ecr get-login --region ap-south-1 --no-include-email)
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 931031263228.dkr.ecr.us-east-1.amazonaws.com
-      - # Replace with this to your repository URI
-      - REPOSITORY_URI=931031263228.dkr.ecr.us-east-1.amazonaws.com/spring-demo-ecr
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+        - echo Logging in to Amazon ECR....
+        - aws --version
+        # Log in to ECR (using correct region and account ID)
+        - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 931031263228.dkr.ecr.us-east-1.amazonaws.com
+        # Set the repository URI variable
+        - REPOSITORY_URI=931031263228.dkr.ecr.us-east-1.amazonaws.com/spring-demo-ecr
+        # Set the image tag based on the build ID
+        - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+
   build:
     commands:
       - echo Build started on `date`
